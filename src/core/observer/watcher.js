@@ -98,6 +98,7 @@ export default class Watcher {
   /**
    * Evaluate the getter, and re-collect dependencies.
    */
+  // 一个新的 watcer 在被实例化时就会进行求值，进行依赖收集，懒加载的 watcher 除外
   get () {
     pushTarget(this)
     let value
@@ -114,6 +115,7 @@ export default class Watcher {
       // "touch" every property so they are all tracked as
       // dependencies for deep watching
       if (this.deep) {
+        // 递归 watcher 的值，进行依赖收集
         traverse(value)
       }
       popTarget()
@@ -207,6 +209,7 @@ export default class Watcher {
    * Evaluate the value of the watcher.
    * This only gets called for lazy watchers.
    */
+  // 懒加载的 watcher 使用的获取值函数
   evaluate () {
     this.value = this.get()
     this.dirty = false
@@ -215,6 +218,7 @@ export default class Watcher {
   /**
    * Depend on all deps collected by this watcher.
    */
+  // 调用 dep 的depend方法，将此依赖推入正在观察的watcher
   depend () {
     let i = this.deps.length
     while (i--) {

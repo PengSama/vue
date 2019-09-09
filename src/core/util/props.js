@@ -48,6 +48,8 @@ export function validateProp (
     // make sure to observe it.
     const prevShouldObserve = shouldObserve
     toggleObserving(true)
+    // prop未传值，默认值为 Array 或 Object 时返回的对象需要进行 observe 保证响应式
+    // 所以在子组件修改 prop 为 Object 或 Array 的数据时会触发响应式更新，并且无报错
     observe(value)
     toggleObserving(prevShouldObserve)
   }

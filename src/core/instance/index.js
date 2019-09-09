@@ -5,6 +5,8 @@ import { eventsMixin } from './events'
 import { lifecycleMixin } from './lifecycle'
 import { warn } from '../util/index'
 
+
+// 1. 定义 Vue 构造函数，并且在Vue.prototype上添加功能函数
 function Vue (options) {
   if (process.env.NODE_ENV !== 'production' &&
     !(this instanceof Vue)
@@ -21,3 +23,4 @@ lifecycleMixin(Vue)
 renderMixin(Vue)
 
 export default Vue
+

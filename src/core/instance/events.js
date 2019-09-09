@@ -11,8 +11,9 @@ import { updateListeners } from '../vdom/helpers/index'
 
 export function initEvents (vm: Component) {
   vm._events = Object.create(null)
-  vm._hasHookEvent = false
+  vm._hasHookEvent = false // ?
   // init parent attached events
+  // _parentListeners 可能在内部组件使用 ？？
   const listeners = vm.$options._parentListeners
   if (listeners) {
     updateComponentListeners(vm, listeners)

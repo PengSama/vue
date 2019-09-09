@@ -38,5 +38,5 @@ Vue.prototype.$mount = function (
     hydrating
   )
 }
-
+// 3. export真正使用的 Vue
 export default Vue

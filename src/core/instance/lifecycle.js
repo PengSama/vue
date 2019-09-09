@@ -33,14 +33,16 @@ export function initLifecycle (vm: Component) {
   const options = vm.$options
 
   // locate first non-abstract parent
+  // 内置组件其abstract属性为true，e.g <keep-alive>,<transtion>
   let parent = options.parent
   if (parent && !options.abstract) {
     while (parent.$options.abstract && parent.$parent) {
       parent = parent.$parent
     }
+    // 将此组件添加到其父组件的children中
     parent.$children.push(vm)
   }
-
+  // $parent 为其父组件
   vm.$parent = parent
   vm.$root = parent ? parent.$root : vm
 
@@ -80,6 +82,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
       vm.$el.__vue__ = vm
     }
     // if parent is an HOC, update its $el as well
+    // 高阶组件的 $el 等于其包裹的组件的 $el
     if (vm.$vnode && vm.$parent && vm.$vnode === vm.$parent._vnode) {
       vm.$parent.$el = vm.$el
     }

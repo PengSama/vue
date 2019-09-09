@@ -69,11 +69,13 @@ function initProps (vm: Component, propsOptions: Object) {
   const keys = vm.$options._propKeys = []
   const isRoot = !vm.$parent
   // root instance props should be converted
+  // 根 Vue 实例的 props 需要响应式
   if (!isRoot) {
     toggleObserving(false)
   }
   for (const key in propsOptions) {
     keys.push(key)
+    // 获取 prop 的值或者默认值
     const value = validateProp(key, propsOptions, propsData, vm)
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
@@ -150,7 +152,7 @@ function initData (vm: Component) {
   // observe data
   observe(data, true /* asRootData */)
 }
-
+// 当 vue 的data选项初始化时不去触发依赖收集，原因是如果依赖收集，则依赖变化则data也变化 ？ 
 export function getData (data: Function, vm: Component): any {
   // #7573 disable dep collection when invoking data getters
   pushTarget()
@@ -184,6 +186,8 @@ function initComputed (vm: Component, computed: Object) {
 
     if (!isSSR) {
       // create internal watcher for the computed property.
+      // 为计算属性的函数添加一个watch实例，收集dep，
+      // 在dep变动时触发watch，运行此函数，返回计算属性的值
       watchers[key] = new Watcher(
         vm,
         getter || noop,
@@ -237,14 +241,17 @@ export function defineComputed (
   }
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
-
+// 计算属性是个懒加载的watch，只有取计算属性的时候才去运行watch，收集依赖
 function createComputedGetter (key) {
   return function computedGetter () {
     const watcher = this._computedWatchers && this._computedWatchers[key]
     if (watcher) {
+      // 第一次取计算属性值得时候 dirty = lazy 为 true，
+      // 此时执行watch取值函数并且收集依赖， dirty 为 false
       if (watcher.dirty) {
         watcher.evaluate()
       }
+      // 如果此计算属性被其他计算属性使用，则进行依赖收集
       if (Dep.target) {
         watcher.depend()
       }
@@ -258,7 +265,7 @@ function createGetterInvoker(fn) {
     return fn.call(this, this)
   }
 }
-
+// 只是简单的把方法注册到当前 Vue 实例
 function initMethods (vm: Component, methods: Object) {
   const props = vm.$options.props
   for (const key in methods) {
