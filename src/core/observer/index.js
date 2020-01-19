@@ -34,6 +34,7 @@ export function toggleObserving (value: boolean) {
  * object's property keys into getter/setters that
  * collect dependencies and dispatch updates.
  */
+// 
 export class Observer {
   value: any;
   dep: Dep;
@@ -108,10 +109,12 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
  * or the existing observer if the value already has one.
  */
 export function observe (value: any, asRootData: ?boolean): Observer | void {
+  // 不是对象或者为vnode则不进行观测
   if (!isObject(value) || value instanceof VNode) {
     return
   }
   let ob: Observer | void
+  // 如果对象已经被 observe 过则返回 observe 对象
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
@@ -160,6 +163,7 @@ export function defineReactive (
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
+        // 获取属性的时候将此属性添加到正在进行中的dep target中
         dep.depend()
         if (childOb) {
           childOb.dep.depend()
@@ -188,6 +192,7 @@ export function defineReactive (
         val = newVal
       }
       childOb = !shallow && observe(newVal)
+      // 通知所有依赖该属性的 响应式属性进行更新
       dep.notify()
     }
   })

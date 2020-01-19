@@ -166,6 +166,7 @@ export default class Watcher {
   update () {
     /* istanbul ignore else */
     if (this.lazy) {
+      // 脏检查设置为true，当计算属性取值时需要执行 evaluate()
       this.dirty = true
     } else if (this.sync) {
       this.run()

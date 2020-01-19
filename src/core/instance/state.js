@@ -45,6 +45,11 @@ export function proxy (target: Object, sourceKey: string, key: string) {
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
+/**
+ * @description 初始化顺序props, methods, data, computed, watch
+ * @export
+ * @param {Component} vm
+ */
 export function initState (vm: Component) {
   vm._watchers = []
   const opts = vm.$options
@@ -62,7 +67,7 @@ export function initState (vm: Component) {
 }
 
 function initProps (vm: Component, propsOptions: Object) {
-  const propsData = vm.$options.propsData || {}
+  const propsData = vm.$options.propsData || {} // 父组件传入子组件的prop值
   const props = vm._props = {}
   // cache prop keys so that future props updates can iterate using Array
   // instead of dynamic object key enumeration.
@@ -152,7 +157,8 @@ function initData (vm: Component) {
   // observe data
   observe(data, true /* asRootData */)
 }
-// 当 vue 的data选项初始化时不去触发依赖收集，原因是如果依赖收集，则依赖变化则data也变化 ？ 
+// 当 vue 的data选项初始化时不去触发依赖收集，原因是如果依赖收集，则依赖变化则data也变化 ？
+// 依赖收集的话 被观测的 prop会被收集成dep ？？？？
 export function getData (data: Function, vm: Component): any {
   // #7573 disable dep collection when invoking data getters
   pushTarget()
@@ -251,7 +257,7 @@ function createComputedGetter (key) {
       if (watcher.dirty) {
         watcher.evaluate()
       }
-      // 如果此计算属性被其他计算属性使用，则进行依赖收集
+      // 如果此计算属性被其他 watcher 使用，则进行依赖收集
       if (Dep.target) {
         watcher.depend()
       }

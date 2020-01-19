@@ -19,6 +19,7 @@ const normalizeEvent = cached((name: string): {
   handler?: Function,
   params?: Array<any>
 } => {
+  // 事件修饰符 & ! ~
   const passive = name.charAt(0) === '&'
   name = passive ? name.slice(1) : name
   const once = name.charAt(0) === '~' // Prefixed last, checked first
@@ -50,6 +51,17 @@ export function createFnInvoker (fns: Function | Array<Function>, vm: ?Component
   return invoker
 }
 
+/**
+ *
+ *
+ * @export
+ * @param {Object} on
+ * @param {Object} oldOn
+ * @param {Function} add
+ * @param {Function} remove
+ * @param {Function} createOnceHandler
+ * @param {Component} vm
+ */
 export function updateListeners (
   on: Object,
   oldOn: Object,

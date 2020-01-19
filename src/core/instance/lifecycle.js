@@ -29,6 +29,12 @@ export function setActiveInstance(vm: Component) {
   }
 }
 
+/**
+ *
+ * @description 初始化自身一些跟生命周期相关的状态，把自身添加到父组件中
+ * @export
+ * @param {Component} vm
+ */
 export function initLifecycle (vm: Component) {
   const options = vm.$options
 
@@ -39,7 +45,7 @@ export function initLifecycle (vm: Component) {
     while (parent.$options.abstract && parent.$parent) {
       parent = parent.$parent
     }
-    // 将此组件添加到其父组件的children中
+    // 将此组件添加到其第一个不为abstracd的父组件的children中
     parent.$children.push(vm)
   }
   // $parent 为其父组件
@@ -71,6 +77,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
     } else {
       // updates
+      // 节点更新的时候才会使用__patch__函数用来比较旧节点和新节点的差异来更新DOM
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
     restoreActiveInstance()
@@ -197,6 +204,8 @@ export function mountComponent (
   // we set this to vm._watcher inside the watcher's constructor
   // since the watcher's initial patch may call $forceUpdate (e.g. inside child
   // component's mounted hook), which relies on vm._watcher being already defined
+  // 在实例上面设置一个renderwatch 用来更新此实例对应的DOM，
+  // watch实例化的时候已经运行科updateComponent生成了dom节点并进行了更新
   new Watcher(vm, updateComponent, noop, {
     before () {
       if (vm._isMounted && !vm._isDestroyed) {
@@ -210,6 +219,7 @@ export function mountComponent (
   // mounted is called for render-created child components in its inserted hook
   if (vm.$vnode == null) {
     vm._isMounted = true
+    // dom渲染后调用mounted函数
     callHook(vm, 'mounted')
   }
   return vm

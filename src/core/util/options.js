@@ -305,6 +305,7 @@ function normalizeProps (options: Object, vm: ?Component) {
     while (i--) {
       val = props[i]
       if (typeof val === 'string') {
+        // user-info -> userInfo
         name = camelize(val)
         res[name] = { type: null }
       } else if (process.env.NODE_ENV !== 'production') {
@@ -393,7 +394,7 @@ export function mergeOptions (
   if (process.env.NODE_ENV !== 'production') {
     checkComponents(child)
   }
-
+  // 什么时候child是个构造函数？？？
   if (typeof child === 'function') {
     child = child.options
   }

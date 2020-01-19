@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="./dist/vue.js"></script>
+  <title>Document</title>
+</head>
+<body>
+  <div id='app'></div>
+  <script>
+    var b = {
+      template: `<div>{{ name }}<button @click='click'>改变props</button></div>`,
+      props: ['name'],
+      methods: {
+        click(e) {
+          this.name = 'another'
+        }
+      },
+      
+    }
+    var a = {
+      template: `<div>
+          <input v-model='data' @change='handleChange'>
+          <div>{{ data }}</div>
+          <B :name='data'></B>
+        </div>`,
+      components: {
+        B: b
+      },
+      data() {
+        return {
+          data: ''
+        }
+      },
+      methods: {
+        handleChange(e) {
+          console.log(e)
+        }
+      },
+    }
+    var vm = new Vue({
+      template: '<A />',
+      components: {
+        A: a
+      },
+    })
+    vm.$mount('#app')
+  </script>
+</body>
+</html>
