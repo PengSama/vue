@@ -3061,7 +3061,7 @@
       contextVm,
       Ctor
     );
-
+    // 函数式组件提供了上下文为render 的第二参数，非函数组件值有第一个参数
     var vnode = options.render.call(null, renderContext._c, renderContext);
 
     if (vnode instanceof VNode) {
