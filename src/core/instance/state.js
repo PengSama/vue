@@ -158,7 +158,7 @@ function initData (vm: Component) {
   observe(data, true /* asRootData */)
 }
 // 当 vue 的data选项初始化时不去触发依赖收集，原因是如果依赖收集，则依赖变化则data也变化 ？
-// 依赖收集的话 被观测的 prop会被收集成dep ？？？？
+// 依赖收集的话 触发props的getter时会手机依赖，造成初次渲染父组件会渲染两次的问题
 export function getData (data: Function, vm: Component): any {
   // #7573 disable dep collection when invoking data getters
   pushTarget()
@@ -329,6 +329,11 @@ function createWatcher (
   return vm.$watch(expOrFn, handler, options)
 }
 
+// 在Vue.prototype上定义$data, 实际返回实例的_data
+// 在Vue.prototype上定义$props, 实际返回实例的_props
+// 在Vue.prototype上定义$set
+// 在Vue.prototype上定义$delete
+// 在Vue.prototype上定义$watch
 export function stateMixin (Vue: Class<Component>) {
   // flow somehow has problems with directly declared definition object
   // when using Object.defineProperty, so we have to procedurally build up

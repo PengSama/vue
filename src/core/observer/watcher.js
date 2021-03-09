@@ -57,6 +57,7 @@ export default class Watcher {
     // options
     if (options) {
       this.deep = !!options.deep
+      // 组件内的watch的user属性为true
       this.user = !!options.user
       this.lazy = !!options.lazy
       this.sync = !!options.sync

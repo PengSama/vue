@@ -4,6 +4,7 @@ import config from 'core/config'
 import { warn, cached } from 'core/util/index'
 import { mark, measure } from 'core/util/perf'
 
+// 运行时的Vue
 import Vue from './runtime/index'
 import { query } from './util/index'
 import { compileToFunctions } from './compiler/index'
@@ -30,7 +31,8 @@ Vue.prototype.$mount = function (
   }
 
   const options = this.$options
-  // resolve template/el and convert to render function
+  // 带编译器版本需要做的事情
+  //resolve template/el and convert to render function
   if (!options.render) {
     let template = options.template
     if (template) {

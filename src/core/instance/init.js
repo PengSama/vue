@@ -11,15 +11,16 @@ import { initProvide, initInjections } from './inject'
 import { extend, mergeOptions, formatComponentName } from '../util/index'
 
 let uid = 0
-
+// 将_init方法添加到Vue.prototype, new Vue()时执行_init()
 export function initMixin (Vue: Class<Component>) {
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
-    // a uid
+    // a uid, 一个Vue实例的唯一编码，自增
     vm._uid = uid++
 
     let startTag, endTag
     /* istanbul ignore if */
+    // 性能测试
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
       startTag = `vue-perf-start:${vm._uid}`
       endTag = `vue-perf-end:${vm._uid}`
@@ -27,6 +28,7 @@ export function initMixin (Vue: Class<Component>) {
     }
 
     // a flag to avoid this being observed
+    // vue实例不被观测
     vm._isVue = true
     // merge options
     if (options && options._isComponent) {
@@ -35,7 +37,9 @@ export function initMixin (Vue: Class<Component>) {
       // internal component options needs special treatment.
       initInternalComponent(vm, options)
     } else {
+      // 将构造函数的options和实例的options合并
       vm.$options = mergeOptions(
+        // 实例的构造函数可能是Vue或者Vue.extend扩展的构造函数
         resolveConstructorOptions(vm.constructor),
         options || {},
         vm
@@ -52,7 +56,7 @@ export function initMixin (Vue: Class<Component>) {
     initLifecycle(vm)
     initEvents(vm)
     initRender(vm)
-    // beforeCreate 中 data,prop等属性还未获取到值
+    // beforeCreate 中 data,prop等属性还未获取到值，因为还没有执行初始化操作initState
     callHook(vm, 'beforeCreate')
     initInjections(vm) // resolve injections before data/props
     initState(vm)
@@ -91,8 +95,10 @@ export function initInternalComponent (vm: Component, options: InternalComponent
   }
 }
 
+// 合并构造函数的options
 export function resolveConstructorOptions (Ctor: Class<Component>) {
   let options = Ctor.options
+  // 有Super表明是通过Vue.extend继承的子类Sub
   if (Ctor.super) {
     const superOptions = resolveConstructorOptions(Ctor.super)
     const cachedSuperOptions = Ctor.superOptions

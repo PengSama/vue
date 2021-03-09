@@ -57,6 +57,7 @@ export function updateComponentListeners (
   target = undefined
 }
 
+// 在Vue.prototype 上定义了事件系统 $on, $once, $off, $emit
 export function eventsMixin (Vue: Class<Component>) {
   const hookRE = /^hook:/
   Vue.prototype.$on = function (event: string | Array<string>, fn: Function): Component {
@@ -70,6 +71,8 @@ export function eventsMixin (Vue: Class<Component>) {
       // optimize hook:event cost by using a boolean flag marked at registration
       // instead of a hash lookup
       if (hookRE.test(event)) {
+        // 可以在使用在第三方组件上面例如注册 @hook:created='handleCreate',则当子组件的created
+        // 函数调用时这个hook生命周期函数也会调用
         vm._hasHookEvent = true
       }
     }

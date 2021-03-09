@@ -121,7 +121,9 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     shouldObserve &&
     !isServerRendering() &&
     (Array.isArray(value) || isPlainObject(value)) &&
+    // 不可扩展的对象不会被 observe， 包括 Object.seal, Object.preventExtensions, Object.freeze。
     Object.isExtensible(value) &&
+    // Vue实例不被 observe
     !value._isVue
   ) {
     ob = new Observer(value)
@@ -163,7 +165,7 @@ export function defineReactive (
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
-        // 获取属性的时候将此属性添加到正在进行中的dep target中
+        // 获取属性的时候将此依赖添加到正在进行中的dep target（water实例）中
         dep.depend()
         if (childOb) {
           childOb.dep.depend()

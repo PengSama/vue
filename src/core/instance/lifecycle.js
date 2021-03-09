@@ -45,7 +45,7 @@ export function initLifecycle (vm: Component) {
     while (parent.$options.abstract && parent.$parent) {
       parent = parent.$parent
     }
-    // 将此组件添加到其第一个不为abstracd的父组件的children中
+    // 将此组件添加到其第一个不为 abstract 的父组件的children中
     parent.$children.push(vm)
   }
   // $parent 为其父组件
@@ -63,7 +63,9 @@ export function initLifecycle (vm: Component) {
   vm._isBeingDestroyed = false
 }
 
+// 在Vue.prototype 上面添加了_update, $forceUpdate, $destroy
 export function lifecycleMixin (Vue: Class<Component>) {
+  // 更新Dom视图
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
     const prevEl = vm.$el
@@ -205,7 +207,7 @@ export function mountComponent (
   // since the watcher's initial patch may call $forceUpdate (e.g. inside child
   // component's mounted hook), which relies on vm._watcher being already defined
   // 在实例上面设置一个renderwatch 用来更新此实例对应的DOM，
-  // watch实例化的时候已经运行科updateComponent生成了dom节点并进行了更新
+  // watch实例化的时候已经运行了updateComponent生成了dom节点并进行了更新
   new Watcher(vm, updateComponent, noop, {
     before () {
       if (vm._isMounted && !vm._isDestroyed) {

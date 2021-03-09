@@ -398,8 +398,25 @@ export function mergeOptions (
   if (typeof child === 'function') {
     child = child.options
   }
-
+  // 类似这种格式化
+  // {
+  //   name: {
+  //     type: String,
+  //   },
+  //   {
+  //     useInfo: {
+  //       type: null
+  //     }
+  //   }
+  // }
   normalizeProps(child, vm)
+
+  // 类似这种格式化
+  // {
+  //   name: {
+  //     from: 'value',
+  //   },
+  // }
   normalizeInject(child, vm)
   normalizeDirectives(child)
 
@@ -407,6 +424,7 @@ export function mergeOptions (
   // but only if it is a raw options object that isn't
   // the result of another mergeOptions call.
   // Only merged options has the _base property.
+  // 合并原始options, 合并后的options会有_base属性
   if (!child._base) {
     if (child.extends) {
       parent = mergeOptions(parent, child.extends, vm)
