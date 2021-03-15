@@ -12,10 +12,12 @@ export const createCompiler = createCompilerCreator(function baseCompile (
   template: string,
   options: CompilerOptions
 ): CompiledResult {
+  // 将模板解析成树结构
   const ast = parse(template.trim(), options)
   if (options.optimize !== false) {
     optimize(ast, options)
   }
+  // 生成 render 函数
   const code = generate(ast, options)
   return {
     ast,

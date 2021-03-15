@@ -32,6 +32,8 @@ export const emptyNode = new VNode('', {}, [])
 
 const hooks = ['create', 'activate', 'update', 'remove', 'destroy']
 
+// 首先比较key是否相同，v-for中的key
+// 其次比较tag
 function sameVnode (a, b) {
   return (
     a.key === b.key && (
@@ -55,7 +57,7 @@ function sameInputType (a, b) {
   const typeA = isDef(i = a.data) && isDef(i = i.attrs) && i.type
   const typeB = isDef(i = b.data) && isDef(i = i.attrs) && i.type
   return typeA === typeB || isTextInputType(typeA) && isTextInputType(typeB)
-}
+} 
 
 function createKeyToOldIdx (children, beginIdx, endIdx) {
   let i, key
@@ -711,6 +713,7 @@ export function createPatchFunction (backend) {
       isInitialPatch = true
       createElm(vnode, insertedVnodeQueue)
     } else {
+      // 有 nodeType 的vnode就是实际Dom
       const isRealElement = isDef(oldVnode.nodeType)
       if (!isRealElement && sameVnode(oldVnode, vnode)) {
         // patch existing root node

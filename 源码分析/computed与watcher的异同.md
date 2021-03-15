@@ -1,7 +1,7 @@
 ## computed 与 watch 的异同
 
 ### 不同之处
-
+- computed 不能执行异步操作， watch可以监听一个属性进行操作复杂的异步操作。
 - computed 在 `vue` 实例化发过程中会变成实例的一个属性，而 `watch` 则只生成一个watcher实例并存放在vue实例中_watchers中。
 - computed 可以监听多个属性值， watch 只能监听一个属性
 - computed 使用的函数返回值，watch 是运行函数
@@ -12,3 +12,9 @@
 
 - computed 和 watch 都会监听属性的变化
 - computed 和 watch 都会生成 watcher 实例
+
+
+### computed 跟methods的区别
+
+computd会缓存计算结果，当依赖没发生变化时返回缓存的结果
+methods在每次渲染时都会去执行方法

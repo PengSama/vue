@@ -92,6 +92,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     }
     // if parent is an HOC, update its $el as well
     // 高阶组件的 $el 等于其包裹的组件的 $el
+    // element-ui menu组件的一个bug 由此引起
     if (vm.$vnode && vm.$parent && vm.$vnode === vm.$parent._vnode) {
       vm.$parent.$el = vm.$el
     }
@@ -207,7 +208,7 @@ export function mountComponent (
   // since the watcher's initial patch may call $forceUpdate (e.g. inside child
   // component's mounted hook), which relies on vm._watcher being already defined
   // 在实例上面设置一个renderwatch 用来更新此实例对应的DOM，
-  // watch实例化的时候已经运行了updateComponent生成了dom节点并进行了更新
+  // watch实例化的时候因为不是lazy的watch,所以执行get已经运行了updateComponent生成了dom节点并进行了更新
   new Watcher(vm, updateComponent, noop, {
     before () {
       if (vm._isMounted && !vm._isDestroyed) {
