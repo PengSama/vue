@@ -78,6 +78,7 @@ export default class Watcher {
       : ''
     // parse expression for getter
     if (typeof expOrFn === 'function') {
+      // 计算属性直接就是getter
       this.getter = expOrFn
     } else {
       this.getter = parsePath(expOrFn)

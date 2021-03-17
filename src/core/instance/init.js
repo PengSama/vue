@@ -38,8 +38,10 @@ export function initMixin (Vue: Class<Component>) {
       initInternalComponent(vm, options)
     } else {
       // 将构造函数的options和实例的options合并
+      // $options会存在所有继承来的构造函数的options,直到Vue构造函数
       vm.$options = mergeOptions(
         // 实例的构造函数可能是Vue或者Vue.extend扩展的构造函数
+        // 合并后继承的options会在__proto__上一直链式存在
         resolveConstructorOptions(vm.constructor),
         options || {},
         vm

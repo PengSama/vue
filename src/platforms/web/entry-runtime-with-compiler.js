@@ -71,6 +71,10 @@ Vue.prototype.$mount = function (
         delimiters: options.delimiters,
         comments: options.comments
       }, this)
+      // like: function () { with(this) {
+      //         _c('div',null)
+      // } }
+      // render 返回的是 vNode
       options.render = render
       options.staticRenderFns = staticRenderFns
 

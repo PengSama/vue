@@ -20,7 +20,8 @@ export function initEvents (vm: Component) {
   vm._hasHookEvent = false // ?
   // init parent attached events
   // _parentListeners 可能在内部组件使用 ？？
-  // 
+  
+  // vm.$options._parentListeners 为父组件的事件监听器 通过v-on注册
   const listeners = vm.$options._parentListeners
   if (listeners) {
     updateComponentListeners(vm, listeners)

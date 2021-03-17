@@ -67,14 +67,14 @@ export function initState (vm: Component) {
 }
 
 function initProps (vm: Component, propsOptions: Object) {
-  const propsData = vm.$options.propsData || {} // 父组件传入子组件的prop值
+  const propsData = vm.$options.propsData || {} // 父组件传入子组件的prop值一般为测试使用
   const props = vm._props = {}
   // cache prop keys so that future props updates can iterate using Array
   // instead of dynamic object key enumeration.
   const keys = vm.$options._propKeys = []
   const isRoot = !vm.$parent
   // root instance props should be converted
-  // 根 Vue 实例的 props 需要响应式
+  // 根 Vue 实例的 props 需要双向绑定
   if (!isRoot) {
     toggleObserving(false)
   }
@@ -158,7 +158,7 @@ function initData (vm: Component) {
   observe(data, true /* asRootData */)
 }
 // 当 vue 的data选项初始化时不去触发依赖收集，原因是如果依赖收集，则依赖变化则data也变化 ？
-// 依赖收集的话 触发props的getter时会手机依赖，造成初次渲染父组件会渲染两次的问题
+// 依赖收集的话 触发props的getter时会收集依赖，造成初次渲染父组件会渲染两次的问题
 export function getData (data: Function, vm: Component): any {
   // #7573 disable dep collection when invoking data getters
   pushTarget()
@@ -193,7 +193,8 @@ function initComputed (vm: Component, computed: Object) {
     if (!isSSR) {
       // create internal watcher for the computed property.
       // 为计算属性的函数添加一个watch实例，收集dep，
-      // 在dep变动时触发watch，运行此函数，返回计算属性的值
+      // 在dep变动时触发watch，运行此函数，返回计算属性的值, 计算属性watch是懒加载，在获取计算属性的
+      // 值时才会进行结果计算
       watchers[key] = new Watcher(
         vm,
         getter || noop,
