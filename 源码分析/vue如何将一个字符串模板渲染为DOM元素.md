@@ -46,3 +46,6 @@ vm.$mount('#app')
 2. created 表示Vue实例已经创建，等待调用实例的$mount方法来执行渲染
 3. beforeMount 在调用了$mount中，templeate已经编译为了render。验证了实例是可以渲染的以后调用，组件的渲染函数watcher还未注册
 4. mounted 组件的渲染函数已经注册，dom已经创建。
+
+
+## patch算法中对比新旧vnode的关键方法 updateChildren

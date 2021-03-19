@@ -32,7 +32,7 @@ export const emptyNode = new VNode('', {}, [])
 
 const hooks = ['create', 'activate', 'update', 'remove', 'destroy']
 
-// 首先比较key是否相同，v-for中的key
+// 首先比较key是否相同，v-for中的key或者自定义的key
 // 其次比较tag
 function sameVnode (a, b) {
   return (
@@ -124,6 +124,17 @@ export function createPatchFunction (backend) {
 
   let creatingElmInVPre = 0
 
+
+  // createElm(children[i], insertedVnodeQueue, vnode.elm, null, true, children, i)
+  // createElm(
+  //   vnode,
+  //   insertedVnodeQueue,
+  //   // extremely rare edge case: do not insert if old element is in a
+  //   // leaving transition. Only happens when combining transition +
+  //   // keep-alive + HOCs. (#4590)
+  //   oldElm._leaveCb ? null : parentElm,
+  //   nodeOps.nextSibling(oldElm)
+  // )
   function createElm (
     vnode,
     insertedVnodeQueue,
@@ -190,6 +201,7 @@ export function createPatchFunction (backend) {
           insert(parentElm, vnode.elm, refElm)
         }
       } else {
+        // 现将子元素的dom结构都生成，在后面一个一个往上挂载到父级dom上
         createChildren(vnode, children, insertedVnodeQueue)
         if (isDef(data)) {
           invokeCreateHooks(vnode, insertedVnodeQueue)
@@ -402,7 +414,7 @@ export function createPatchFunction (backend) {
       removeNode(vnode.elm)
     }
   }
-
+  // 关键方法 对比新旧节点更新必要的组件节点
   function updateChildren (parentElm, oldCh, newCh, insertedVnodeQueue, removeOnly) {
     let oldStartIdx = 0
     let newStartIdx = 0
@@ -422,7 +434,10 @@ export function createPatchFunction (backend) {
     if (process.env.NODE_ENV !== 'production') {
       checkDuplicateKeys(newCh)
     }
-
+    // 1. 找到旧虚拟节点数组的第一个节点
+    // 2. 找到旧虚拟节点数组的最后一个节点
+    // 3. 如果旧开始节点等于新开始节点，则patchVnode(旧节点，新节点)
+    // 尽量复用已存在的虚拟节点
     while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
       if (isUndef(oldStartVnode)) {
         oldStartVnode = oldCh[++oldStartIdx] // Vnode has been moved left
@@ -499,7 +514,7 @@ export function createPatchFunction (backend) {
       if (isDef(c) && sameVnode(node, c)) return i
     }
   }
-
+  // patchVnode(oldVnode, vnode, insertedVnodeQueue, null, null, removeOnly)
   function patchVnode (
     oldVnode,
     vnode,

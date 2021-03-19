@@ -71,6 +71,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     const prevEl = vm.$el
     const prevVnode = vm._vnode
     const restoreActiveInstance = setActiveInstance(vm)
+    // 实例私有属性
     vm._vnode = vnode
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
@@ -177,6 +178,7 @@ export function mountComponent (
       }
     }
   }
+  // 一切准备就绪，渲染函数已经生成，beforeMount后面就开始生成虚拟Dom
   callHook(vm, 'beforeMount')
 
   let updateComponent
@@ -222,7 +224,7 @@ export function mountComponent (
   // mounted is called for render-created child components in its inserted hook
   if (vm.$vnode == null) {
     vm._isMounted = true
-    // dom渲染后调用mounted函数
+    // dom更新后调用mounted函数
     callHook(vm, 'mounted')
   }
   return vm
