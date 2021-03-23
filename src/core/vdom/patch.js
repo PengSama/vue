@@ -436,7 +436,9 @@ export function createPatchFunction (backend) {
     }
     // 1. 找到旧虚拟节点数组的第一个节点
     // 2. 找到旧虚拟节点数组的最后一个节点
-    // 3. 如果旧开始节点等于新开始节点，则patchVnode(旧节点，新节点)
+    // 3. 如果旧开始节点等于新开始节点，则进行两个节点的继续比较
+    // 4. 如果旧结束节点等于新结束节点，则进行两个节点继续比较
+    // 5. 在旧节点中找新节点的index, 存在的话进行两个节点的比较，并插入，不存在则新建节点
     // 尽量复用已存在的虚拟节点
     while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
       if (isUndef(oldStartVnode)) {
